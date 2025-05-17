@@ -1,0 +1,36 @@
+# Este é um arquivo .dockerignore para seu projeto Nest.js
+
+# Arquivos de dependências e build
+node_modules
+npm-debug.log
+pnpm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Arquivos de sistema
+.git
+.github
+.gitignore
+.DS_Store
+.env
+.env.local
+.env.development
+.env.test
+
+# Diretórios de build e testes
+/dist
+/coverage
+/.nyc_output
+/test
+
+# Arquivos de editor
+.idea
+.vscode
+*.swp
+*.swo
+
+# Outros
+README.md
+CHANGELOG.md
+LICENSE
+docs

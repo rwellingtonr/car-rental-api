@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum RentalStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SeasonType {
+  PEAK
+  MID
+  OFF
+}
+
+model Stock {
+  id        String   @id @default(cuid())
+  brand     String
+  model     String
+  cars      Car[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("stocks")
+  @@unique([brand, model])
+}
+
+model Car {
+  id                     String   @id @default(cuid())
+  stockId                String   @map("stock_id")
+  peakSeasonPriceInCents Int      @map("peak_season_price_in_cents")
+  midSeasonPriceInCents  Int      @map("mid_season_price_in_cents")
+  offSeasonPriceInCents  Int      @map("off_season_price_in_cents")
+  available   Boolean     @default(true)
+  imageUrl    String?
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  stock Stock @relation(fields: [stockId], references: [id])
+  carRental CarRental[]
+
+  @@map("cars")
+}
+
+model CarRental {
+  id        String   @id @default(cuid())
+  carId     String   @map("car_id")
+  seasonId  String   @map("season_id")
+  scheduleCode String @unique @map("schedule_code")
+  totalAmountInCents Int @map("total_amount_in_cents")
+  status      RentalStatus @default(PENDING)
+
+  car    Car     @relation(fields: [carId], references: [id])
+  season Season  @relation(fields: [seasonId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@map("car_rentals")
+}
+
+model Season {
+  id        String   @id @default(cuid())
+  type      SeasonType
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  carRental CarRental[]
+
+  @@map("seasons")
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  password           String
+  driveLicense       String   @map("drive_license")
+  driveLicenseExpiry DateTime @map("drive_license_expiry")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  carRental CarRental[]
+
+  @@map("users")
+}

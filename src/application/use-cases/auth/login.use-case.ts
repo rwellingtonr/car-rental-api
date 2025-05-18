@@ -28,6 +28,8 @@ export class LoginUseCase {
 
 		const accessToken = await this.jwtProviderService.sign({ id: user.id });
 
-		return { accessToken };
+		delete user.password;
+
+		return { accessToken, user };
 	}
 }

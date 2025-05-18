@@ -15,6 +15,7 @@ import { GetAvailableCarsUseCase } from '@/application/use-cases/car-rental/get-
 import { AuthGuard } from '@/application/use-cases/auth/guard.use-case';
 import { CurrentUser, type User } from '@/common/decorators/current-user.decorator';
 import { RequestRentUseCase } from '@/application/use-cases/car-rental/request-rent.use-case';
+import { HandleRentCarResponseDto } from './dto/handle-rent-car-response.dto';
 
 @ApiTags('CAR RENTAL')
 @Controller('car-rental')
@@ -25,7 +26,7 @@ export class CarRentalController {
 	) {}
 
 	@ApiOperation({ summary: 'List cars to rent' })
-	@ApiOkResponse({ type: HandleListAvailableCarsDto })
+	@ApiOkResponse({ type: HandleListAvailableCarsDto, isArray: true })
 	@ApiNotFoundResponse()
 	@Get('available/:seasonId')
 	async handleListCarsToRent(@Param('seasonId') seasonId: string) {
@@ -34,8 +35,9 @@ export class CarRentalController {
 	}
 
 	@ApiOperation({ summary: 'Rent a car' })
-	@ApiCreatedResponse()
+	@ApiCreatedResponse({ type: HandleRentCarResponseDto })
 	@ApiBadRequestResponse()
+	@ApiNotFoundResponse()
 	@ApiUnauthorizedResponse()
 	@UseGuards(AuthGuard)
 	@ApiBearerAuth()

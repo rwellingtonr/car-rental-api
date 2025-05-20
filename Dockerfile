@@ -21,8 +21,6 @@ ENV NODE_ENV=${NODE_ENV}
 ARG JWT_SECRET
 ENV JWT_SECRET=${JWT_SECRET}
 
-RUN npm install -g pnpm
-
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nestjs
 

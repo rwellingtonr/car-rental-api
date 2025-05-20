@@ -33,25 +33,40 @@ An API RESTful for vehicle rental management, developed with NestJS, Prisma and 
    pnpm install
    ```
 
-3. **Run migrations**
+3. **Copy environment variables**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Update environment variables**
+
+   ```bash
+   DATABASE_URL=<YOUR_POSTGRESQL_DATABASE_URL>
+   NODE_ENV="development"
+   PORT=3333
+   JWT_SECRET=<YOUR_JWT_SECRET>
+   ```
+
+5. **Run migrations**
 
    ```bash
    pnpm prisma migrate deploy
    ```
 
-4. **Run the seed (just for the first time)**
+6. **Run the seed (just for the first time)**
 
    ```bash
    pnpm prisma db seed
    ```
 
-5. **Run the application**
+7. **Run the application**
 
    ```bash
    pnpm start:dev
    ```
 
-6. **Access the API documentation**
+8. **Access the API documentation**
 
    Interactive documentation is available at:
 
@@ -64,12 +79,15 @@ An API RESTful for vehicle rental management, developed with NestJS, Prisma and 
 ```text
 src/
 ├── application/          # Use cases and business rules
+│   └── repository/       # Repository abstractions
 │   └── use-cases/        # Organized by domain
+├── common/               # Common utilities and shared code
 ├── domain/               # Domain entities and interfaces
 ├── infra/                # Infrastructure layer
 │   ├── controller/       # Controllers
 │   ├── database/         # Database configuration
 │   └── repositories/     # Repository implementations
+├── types/                # Type definitions
 └── main.ts               # Application entry point
 ```
 
@@ -165,16 +183,19 @@ The project follows a clean architecture approach with clear separation of conce
 ### Key Architectural Patterns
 
 1. **Repository Pattern**
+
    - Abstract interfaces define data access contracts (e.g., `AbsCarRentalRepository`)
    - Multiple implementations (e.g., Database and In-Memory) for different environments
    - Enables easy switching between data sources without changing business logic
 
 2. **Dependency Injection**
+
    - Heavy use of NestJS's DI container
    - Dependencies are injected through constructors
    - Makes the code more testable and maintainable
 
 3. **In-Memory Testing**
+
    - In-memory repositories for fast, deterministic unit tests
    - No database required for testing business logic
    - Clear separation between test and production data

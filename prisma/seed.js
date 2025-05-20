@@ -1,7 +1,10 @@
-import { PrismaClient, SeasonType } from '../generated/prisma';
+const { PrismaClient, SeasonType } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
 async function main() {
+	const hasBeenSeeded = await prisma.stock.count();
+	if (hasBeenSeeded > 0) return;
+
 	const stockCars = [
 		{
 			brand: 'Toyota',
